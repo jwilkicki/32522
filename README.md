@@ -2,11 +2,11 @@
 
 ## Current behavior
 
-Renovate generates a PR for the calico-application.yaml but not the externaldns-application.yaml in the argocd/code/templates directory.
+Renovate generates a PR for the `calico-application.yaml` but not the `externaldns-application.yaml` in the `argocd/code/templates` directory.
 
 ## Expected behavior
 
-The expected behavior is for Renovate to generate a PR for both the `calico-application.yaml` and `externaldns-application.yaml` files in the `argocd/code/templates` directory.
+The expected behavior is for Renovate to generate a PR for both the `calico-application.yaml` and `externaldns-application.yaml` files in the `argocd/core/templates` directory.
 
 ## Link to the Renovate issue or Discussion
 

@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: calico
+  namespace: argocd
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/manifest-generate-paths: .;/argocd/core/values-calico.yaml  
+spec:
+  project: admin
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tigera-operator
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+  sources:
+  - repoURL: https://docs.projectcalico.org/charts
+    chart: tigera-operator
+    targetRevision: v3.28.2
+    helm:
+      releaseName: calico
+      valueFiles:
+      - $values/argocd/core/values-calico.yaml
+  - repoURL: https://github.com/jwilkicki/{{ .Values.cluster.name }}
+    targetRevision: main
+    ref: values

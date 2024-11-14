@@ -1,17 +1,13 @@
-# minimal-reproduction-template
-
-First, read the [Renovate minimal reproduction instructions](https://github.com/renovatebot/renovate/blob/main/docs/development/minimal-reproductions.md).
-
-Then replace the current `h1` with the Renovate Issue/Discussion number.
+# 32522
 
 ## Current behavior
 
-Explain the current behavior here.
+Renovate generates a PR for the calico-application.yaml but not the externaldns-application.yaml in the argocd/code/templates directory.
 
 ## Expected behavior
 
-Explain the expected behavior here.
+The expected behavior is for Renovate to generate a PR for both the `calico-application.yaml` and `externaldns-application.yaml` files in the `argocd/code/templates` directory.
 
 ## Link to the Renovate issue or Discussion
 
-Put your link to the Renovate issue or Discussion here.
+[Link to discussion](https://github.com/renovatebot/renovate/discussions/32522)

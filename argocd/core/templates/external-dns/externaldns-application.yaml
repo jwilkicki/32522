@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+  annotations:
+    meta.helm.sh/release-name: {{ .Release.Name }}
+    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+    argocd.argoproj.io/manifest-generate-paths: .;/values.yaml
+spec:
+  project: admin
+  sources:
+    - repoURL: https://kubernetes-sigs.github.io/external-dns/
+      targetRevision: 1.14.4
+      chart: external-dns
+      helm:
+        releaseName: external-dns
+        valueFiles:
+          - $values/values.yaml
+        valuesObject:
+          domainFilters:
+            - {{ .Values.cluster.domain }}
+          policy: sync
+          serviceAccount:
+            annotations:
+              eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.aws.accountid }}:role/{{ .Values.cluster.name }}-external-dns"
+            name: external-dns
+          serviceMonitor:
+            enabled: true
+          sources:
+            - ingress
+            - service
+    - repoURL: https://github.com/jwilkicki/{{ .Values.cluster.name }}
+      targetRevision: HEAD
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
